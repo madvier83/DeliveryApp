@@ -3,10 +3,12 @@ import {StyleSheet, SafeAreaView, Text, View, Alert} from 'react-native';
 import {Button, Card, TextInput} from 'react-native-paper';
 
 export default function LoginScreen({navigation}) {
+    
     function login() {
         // return Alert.alert("Login");
         navigation.navigate("Home")
     }
+
     return (
         <SafeAreaView style={styles.content}>
             <View style={styles.loginCard}>
