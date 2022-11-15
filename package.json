@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
+    "@react-navigation/material-bottom-tabs": "^6.2.4",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
     "numeral": "^2.0.6",
@@ -23,6 +24,11 @@
     "react-native-screens": "^3.18.2",
     "react-native-vector-icons": "^9.2.0",
     "uuid": "^9.0.0"
+  },
+  "overrides": {
+    "@react-navigation/material-bottom-tabs": {
+      "react-native-paper": "^5.0.0-rc.9"
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

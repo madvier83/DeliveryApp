@@ -18,7 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import global from '../global';
 import BottomNavigation1 from '../components/BottomNavigation1';
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
     const [openA, setOpenA] = useState(false);
     const [openB, setOpenB] = useState(false);
 
@@ -113,7 +113,7 @@ export default function HomeScreen() {
             };
             // console.log(data)
             let newHistories = histories;
-            newHistories.push(data);
+            newHistories.unshift(data);
 
             newHistories = JSON.stringify(newHistories);
             console.log(newHistories);
@@ -122,6 +122,7 @@ export default function HomeScreen() {
 
             reset();
             historyInit();
+            navigation.navigate("History")
             // setLoading(false);
         }
     }
@@ -212,8 +213,14 @@ export default function HomeScreen() {
             <Button style={global.ms} mode="contained" onPress={submitFormLocal}>
                 Cari Driver
             </Button>
-            <Button style={global.ms} mode="contained" onPress={logger}>
+            <Button style={global.ms} mode="contained-tonal" onPress={()=>navigation.navigate("History")}>
+                History
+            </Button>
+            <Button style={[global.ms, {marginTop: 16}]} mode="text" onPress={logger}>
                 Dev Log
+            </Button>
+            <Button style={global.ms} mode="text" onPress={()=>navigation.navigate("Login")}>
+                Logout
             </Button>
             
             {/* <BottomNavigation1 /> */}

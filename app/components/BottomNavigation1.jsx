@@ -1,33 +1,15 @@
-// import * as React from 'react';
-// import {BottomNavigation, Text} from 'react-native-paper';
+// import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+// // import { BottomNavigation } from 'react-native-paper';
 
-// const Home = () => <Text>Music</Text>;
+// const Tab = createMaterialBottomTabNavigator();
 
-// const AlbumsRoute = () => <Text>Albums</Text>;
-
-// const RecentsRoute = () => <Text>Recents</Text>;
-
-// const BottomNavigation1 = ({navigation}) => {
-//     const [index, setIndex] = React.useState(0);
-//     const [routes] = React.useState([
-//         {key: 'home', title: 'Music', icon: 'queue-music'},
-//         {key: 'albums', title: 'Albums', icon: 'album'},
-//         {key: 'recents', title: 'Recents', icon: 'history'},
-//     ]);
-
-//     const renderScene = BottomNavigation.SceneMap({
-//         home: Home,
-//         albums: AlbumsRoute,
-//         recents: RecentsRoute,
-//     });
-
+// function BottomNavigation1() {
 //     return (
-//         <BottomNavigation
-//             navigationState={{index, routes}}
-//             onIndexChange={setIndex}
-//             renderScene={renderScene}
-//         />
+//         <Tab.Navigator>
+//             <Tab.Screen name="Home" component={HomeScreen} />
+//             <Tab.Screen name="Settings" component={SettingsScreen} />
+//         </Tab.Navigator>
 //     );
-// };
+// }
 
-// export default BottomNavigation1;
+// export default BottomNavigation1
