@@ -54,7 +54,8 @@ export default function HistoryScreen({navigation}) {
                             weight: obj.weight,
                             cityA: cityList.find(city => city.id == obj.cityA).city,
                             cityB: cityList.find(city => city.id == obj.cityB).city,
-                            detail: obj.detail
+                            detail: obj.detail,
+                            driver: obj.driver
                         })}
                     />
                 ))}

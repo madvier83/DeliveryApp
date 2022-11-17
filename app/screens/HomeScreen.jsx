@@ -1,3 +1,5 @@
+import React from 'react';
+import {useState, useEffect} from 'react';
 import {
     LogBox,
     ScrollView,
@@ -6,17 +8,13 @@ import {
     Text,
     View,
 } from 'react-native';
-import React from 'react';
-import {Appbar, Button, TextInput} from 'react-native-paper';
-// import DropDown from 'react-native-paper-dropdown';
-import DropDownPicker from 'react-native-dropdown-picker';
-import cities from '../../cities.json';
-import {useState, useEffect} from 'react';
+import {ActivityIndicator, Appbar, Button, TextInput} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { v4 as uuid } from 'uuid';
+import DropDownPicker from 'react-native-dropdown-picker';
 
+import cities from '../../cities.json';
+import driver from '../../users.json';
 import global from '../global';
-import BottomNavigation1 from '../components/BottomNavigation1';
 
 export default function HomeScreen({navigation}) {
     const [openA, setOpenA] = useState(false);
@@ -28,14 +26,10 @@ export default function HomeScreen({navigation}) {
 
     const [cityA, setCityA] = useState(null);
     const [cityB, setCityB] = useState(null);
-    const [lat_a, setLat_a] = useState(null);
-    const [lng_a, setLng_a] = useState(null);
-    const [lat_b, setLat_b] = useState(null);
-    const [lng_b, setLng_b] = useState(null);
     const [distance, setDistance] = useState(null);
 
     const [histories, setHistories] = useState([]);
-    
+
     // measure distance
     function deg2rad(deg) {
         return deg * (Math.PI / 180);
@@ -58,7 +52,7 @@ export default function HomeScreen({navigation}) {
     // reset form paket
     function reset() {
         setWeight(1);
-        setDetail('');
+        setDetail(null);
         setCityA(null);
         setCityB(null);
         setDistance(null);
@@ -93,14 +87,17 @@ export default function HomeScreen({navigation}) {
 
     async function submitFormLocal() {
         if (cityA && cityB && detail) {
-            // setLoading(true);
-            let city1 = cities.data.find(obj => obj.id === cityA)
-            let city2 = cities.data.find(obj => obj.id === cityB)
-            
-            let distance_ = getDistance(city1.lat, city1.lng, city2.lat, city2.lng)
+            setLoading(true);
+            let city1 = cities.data.find(obj => obj.id === cityA);
+            let city2 = cities.data.find(obj => obj.id === cityB);
+
+            let distance_ = getDistance(
+                city1.lat,
+                city1.lng,
+                city2.lat,
+                city2.lng,
+            );
             setDistance(distance_);
-            // console.log(city1.lat)
-            // console.log(city2)
 
             const data = {
                 _id: Math.random().toString(16).slice(2),
@@ -110,20 +107,23 @@ export default function HomeScreen({navigation}) {
                 weight: weight,
                 distance: distance_,
                 ongkir: weight * distance_ * 100,
+                driver: driver.data[Math.floor(Math.random()*driver.data.length)]
             };
-            // console.log(data)
+            
             let newHistories = histories;
             newHistories.unshift(data);
-
+            
             newHistories = JSON.stringify(newHistories);
             console.log(newHistories);
             await AsyncStorage.setItem('@histories', newHistories);
             console.log(await AsyncStorage.getItem('@histories'));
 
-            reset();
-            historyInit();
-            navigation.navigate("History")
-            // setLoading(false);
+            setTimeout(function () {
+                reset();
+                historyInit();
+                setLoading(false);
+                navigation.navigate('History');
+            }, 2000);
         }
     }
 
@@ -132,11 +132,13 @@ export default function HomeScreen({navigation}) {
         AsyncStorage.clear();
     }
     async function logger() {
-        const keys = await AsyncStorage.getAllKeys();
-        const result = await AsyncStorage.multiGet(keys);
-        console.log('All :');
-        console.log(result);
+        // AsyncStorage.clear()
+        // const keys = await AsyncStorage.getAllKeys();
+        // const result = await AsyncStorage.multiGet(keys);
+        // console.log('All :');
+        // console.log(result);
         // historyInit()
+        // console.log(driver.data[Math.floor(Math.random()*driver.data.length)])
     }
 
     // check distance when value changes
@@ -165,7 +167,8 @@ export default function HomeScreen({navigation}) {
             <TextInput
                 style={global.ms}
                 label="Berat (kg)"
-                defaultValue="1"
+                value={weight}
+                defaultValue='1'
                 mode="outlined"
                 keyboardType="number-pad"
                 onChangeText={text => setWeight(text)}></TextInput>
@@ -205,24 +208,47 @@ export default function HomeScreen({navigation}) {
             </View>
             <TextInput
                 style={global.ms}
+                value={detail}
                 label="Detail Alamat"
                 mode="outlined"
                 multiline={true}
                 numberOfLines={4}
                 onChangeText={text => setDetail(text)}></TextInput>
-            <Button style={global.ms} mode="contained" onPress={submitFormLocal}>
-                Cari Driver
+            {loading ? (
+                <ActivityIndicator animating={true} size={36} style={global.ml} />
+            ) : (
+                <Button
+                    style={global.ms}
+                    mode="contained"
+                    onPress={submitFormLocal}>
+                    Cari Driver
+                </Button>
+            )}
+            <Button
+                style={global.ms}
+                mode="contained-tonal"
+                onPress={reset}>
+                Reset
             </Button>
-            <Button style={global.ms} mode="contained-tonal" onPress={()=>navigation.navigate("History")}>
+            <Button
+                style={global.ms}
+                mode="contained-tonal"
+                onPress={() => navigation.navigate('History')}>
                 History
             </Button>
-            <Button style={[global.ms, {marginTop: 16}]} mode="text" onPress={logger}>
+            <Button
+                style={[global.ms, {marginTop: 16}]}
+                mode="text"
+                onPress={logger}>
                 Dev Log
             </Button>
-            <Button style={global.ms} mode="text" onPress={()=>navigation.navigate("Login")}>
+            <Button
+                style={global.ms}
+                mode="text"
+                onPress={() => navigation.navigate('Login')}>
                 Logout
             </Button>
-            
+
             {/* <BottomNavigation1 /> */}
         </SafeAreaView>
     );
